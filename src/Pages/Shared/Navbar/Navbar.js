@@ -12,6 +12,7 @@ const Navbar = () => {
     <li><Link to='/login'>Login</Link></li>
   </>
 
+
   return (
     <div className="navbar container mx-auto">
       <div className="navbar-start">
