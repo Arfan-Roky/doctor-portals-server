@@ -1,6 +1,7 @@
 import React from 'react';
 import chair from '../../assets/images/chair.png';
 import Backround from '../../assets/images/bg.png';
+import MainButton from '../Shared/MainButton/MainButton';
 
 const Banner = () => {
 
@@ -24,7 +25,7 @@ const Banner = () => {
         excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a
         id nisi.
       </p>
-      <button className="btn bg-gradient-to-t from-cyan-400 to-cyan-500 text-white border-0 hover:bg-gradient hover:from-cyan-500 hover:to-cyan-400">Get Started</button>
+      <MainButton>Get Started</MainButton>
     </div>
 
   </div>
