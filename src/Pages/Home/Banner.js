@@ -5,15 +5,11 @@ import MainButton from '../Shared/MainButton/MainButton';
 
 const Banner = () => {
 
-  
-  const bgImg = {
-    backgroundImage: "url(" + { Backround } + ")",
-    width:'100%',
-    height:'100%',
-  }
 
     return (
-        <div style={bgImg} className="hero min-h-screen">
+        <div style={{
+          background:`url(${Backround})`
+        }} className="hero min-h-screen">
   <div className="hero-content flex-col lg:flex-row-reverse">
     <img src={chair}
       className="md:w-1/2 rounded-lg shadow-2xl" alt='chair'/>
