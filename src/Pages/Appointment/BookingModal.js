@@ -5,7 +5,7 @@ import auth from '../../.firebase.init';
 import Spinner from '../Shared/Spinner/Spinner';
 import { toast } from 'react-toastify';
 
-const BookingModal = ({ treatment, date, setTreatment }) => {
+const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
   const { _id, name, slots } = treatment;
   const [user, loading] = useAuthState(auth);
   const userName = user?.displayName;
@@ -34,24 +34,22 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
 
     fetch('http://localhost:5000/booking', {
       method: 'POST',
+      body: JSON.stringify(bookingData),
       headers: {
         'content-type': 'application/json',
       },
-      body: JSON.stringify(bookingData),
     })
       .then((res) => res.json())
       .then((data) => {
-        
-        if(data.success){
-          toast(`Appointment is set, ${formattedDate} at ${slot}`)
-
-        }
-        else{
-          toast.error(`already have an appointment on, ${data.booking?.date} at ${data.booking?.slot}`)
-
+        if (data.success) {
+          toast(`Appointment is set, ${formattedDate} at ${slot}`);
+        } else {
+          toast.error(
+            `already have an appointment on, ${data.booking?.date} at ${data.booking?.slot}`
+          );
         }
 
-
+        refetch();
 
         // to close the modal
         setTreatment(null);
@@ -110,7 +108,7 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
             <input
               type="Number"
               placeholder="Phone Number"
-              name='phone'
+              name="phone"
               className="input w-full max-w-xs bg-transparent border-2 border-gray-300"
             />
 
