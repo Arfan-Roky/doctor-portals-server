@@ -3,22 +3,59 @@ import { format } from 'date-fns';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../.firebase.init';
 import Spinner from '../Shared/Spinner/Spinner';
+import { toast } from 'react-toastify';
 
 const BookingModal = ({ treatment, date, setTreatment }) => {
-  const { name, slots } = treatment;
+  const { _id, name, slots } = treatment;
   const [user, loading] = useAuthState(auth);
   const userName = user?.displayName;
   const userEmail = user?.email;
 
-  if(loading){
-      return <Spinner></Spinner>
+  if (loading) {
+    return <Spinner></Spinner>;
   }
 
   const handleBooking = (event) => {
     event.preventDefault();
-    setTreatment(null);
+
+    const formattedDate = format(date, 'PP');
     const slot = event.target.slot.value;
     console.log(slot);
+
+    const bookingData = {
+      treatmentId: _id,
+      treatment: name,
+      date: formattedDate,
+      slot,
+      patient: userEmail,
+      patientName: userName,
+      phone: event.target.phone.value,
+    };
+
+    fetch('http://localhost:5000/booking', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(bookingData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        
+        if(data.success){
+          toast(`Appointment is set, ${formattedDate} at ${slot}`)
+
+        }
+        else{
+          toast.error(`already have an appointment on, ${data.booking?.date} at ${data.booking?.slot}`)
+
+        }
+
+
+
+        // to close the modal
+        setTreatment(null);
+      });
   };
 
   return (
@@ -51,7 +88,9 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
               className="select select-accent w-full max-w-xs bg-transparent border-2 border-gray-300"
             >
               {slots.map((slot, index) => (
-                <option key={index} value={slot}>{slot}</option>
+                <option key={index} value={slot}>
+                  {slot}
+                </option>
               ))}
             </select>
 
@@ -71,6 +110,7 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
             <input
               type="Number"
               placeholder="Phone Number"
+              name='phone'
               className="input w-full max-w-xs bg-transparent border-2 border-gray-300"
             />
 
